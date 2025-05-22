@@ -20,7 +20,7 @@ RUN apt install -y chromium
 
 COPY package.json package-lock.json ./
 
-RUN npm ci --omit=dev --ignore-scripts
+RUN npm ci --ignore-scripts
 
 COPY --from=builder /app/dist ./dist
 
