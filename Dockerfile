@@ -1,16 +1,4 @@
 # syntax=docker/dockerfile:1
-FROM node:20 AS builder
-
-WORKDIR /app
-
-COPY package.json package-lock.json ./
-
-RUN npm ci
-
-COPY . .
-
-RUN npm run build
-
 FROM node:20
 
 WORKDIR /app
@@ -20,8 +8,8 @@ RUN apt install -y chromium
 
 COPY package.json package-lock.json ./
 
-RUN npm ci --ignore-scripts
+COPY . .
 
-COPY --from=builder /app/dist ./dist
+RUN npm ci
 
-CMD [ "node", "dist/bin/gtfs-to-html.js" ]
+ENTRYPOINT [ "gtfs-to-html" ]
