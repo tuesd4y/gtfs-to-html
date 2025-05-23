@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM node:20
+FROM node:24
 
 WORKDIR /app
 
@@ -8,8 +8,14 @@ RUN apt install -y chromium
 
 COPY package.json package-lock.json ./
 
-COPY . .
+ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
+ENV PATH=$PATH:/home/node/.npm-global/bin
 
 RUN npm ci
 
-ENTRYPOINT [ "gtfs-to-html" ]
+COPY . .
+
+RUN npm run build
+RUN npm link
+
+ENTRYPOINT [ "/app/dist/bin/gtfs-to-html.js" ]
